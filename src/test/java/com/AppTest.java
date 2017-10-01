@@ -1,58 +1,47 @@
 package com;
 
-import org.junit.Assert;
-import org.junit.Test;
+import java.util.Arrays;
+import java.util.Collection;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+
+import static org.junit.Assert.*;
+
+@RunWith(Parameterized.class)
 public class AppTest {
 
-    @Test
-    public void sameString() {
-        Assert.assertEquals(false, App.hasOneChange("hello", "hello"));
+    @Parameters
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][] { 
+            { "hello", "hello", false }, {"x", "", true}, {"", "", false},
+            {null, null, false}, {"hello", "hellos", true}, {"hello", "bello", true},
+            {"hllo", "hello", true}, {"hellooo", "hello", false}, {"heiio", "hello", false},
+            {"hel", "hello", false}});
     }
-
-    @Test
-    public void oneEmptyStringOneLetter() {
-        Assert.assertEquals(true, App.hasOneChange("x", ""));
+    
+    private String stringOne;
+    private String stringTwo;
+    private boolean expected;
+    private String message;
+    
+    public AppTest(String stringOne, String stringTwo, boolean expected) {
+        this.stringOne = stringOne;
+        this.stringTwo = stringTwo;
+        this.expected = expected;
+        message = String.format("stringOne = %s\nstringTwo = %s", stringOne, stringTwo);
     }
-
+    
     @Test
-    public void twoEmptyStrings() {
-        Assert.assertEquals(false, App.hasOneChange("", ""));
+    public void runDynamic() {
+        assertEquals(message, expected, Dynamic.hasOneChange(stringOne, stringTwo));
     }
-
+    
     @Test
-    public void twoNullStrings() {
-        Assert.assertEquals(false, App.hasOneChange(null, null));
-    }
-
-    @Test
-    public void oneInsertion() {
-        Assert.assertEquals(true, App.hasOneChange("hello", "hellos"));
-    }
-
-    @Test
-    public void oneSubstituion() {
-        Assert.assertEquals(true, App.hasOneChange("hello", "bello"));
-    }
-
-    @Test
-    public void oneDeletion() {
-        Assert.assertEquals(true, App.hasOneChange("hllo", "hello"));
-    }
-
-    @Test
-    public void twoInsertions() {
-        Assert.assertEquals(false, App.hasOneChange("hellooo", "hello"));
-    }
-
-    @Test
-    public void twoSubstitions() {
-        Assert.assertEquals(false, App.hasOneChange("heiio", "hello"));
-    }
-
-    @Test
-    public void twoDeletions() {
-        Assert.assertEquals(false, App.hasOneChange("hel", "hello"));
+    public void runIterative() {
+        assertEquals(message, expected, Iterative.hasOneChange(stringOne, stringTwo));
     }
 
 }

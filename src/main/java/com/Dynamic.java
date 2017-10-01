@@ -1,6 +1,6 @@
 package com;
 
-public class App {
+public class Dynamic {
 
     /**
      * Determine if number of changes in String (deletion, insertion,
